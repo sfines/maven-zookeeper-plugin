@@ -1,0 +1,8 @@
+<component-sets>
+    <components>
+        <component>
+            <role>com.objectdriven.maven.zookeeper.ZookeeperServerLifecycle</role>
+            <implementation>com.objectdriven.maven.zookeeper.ZookeeperServerLifecycle</implementation>
+        </component>
+    </components>
+</component-sets>
