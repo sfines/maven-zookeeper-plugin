@@ -21,6 +21,15 @@ public class ZookeeperServerLifecycle {
     private NIOServerCnxn.Factory cnxnFactory;
     ZooKeeperServer server;
 
+    /**
+     * This method populates all of the required parameters for the Zookeeper server, but does no start it.
+     *
+     * @param port           The network port on which this server will listen
+     * @param datadir        the filesystem location to store server data
+     * @param tickTime
+     * @param maxConnections
+     * @throws Exception
+     */
     public void configureServer(Integer port, File datadir, Integer tickTime, Integer maxConnections) throws Exception {
         List<String> configArguments = new ArrayList<String>();
         if (port == null) {
@@ -73,9 +82,13 @@ public class ZookeeperServerLifecycle {
 
     }
 
+    /**
+     * Starts the Zookeeper server in a separate thread.
+     *
+     * @throws Exception
+     */
     public void start() throws Exception {
         //Anonymous Inner class to fork running the server process to a different thread.
-
         Runnable serverRunnable = new Runnable() {
             public void run() {
                 try {
@@ -88,7 +101,7 @@ public class ZookeeperServerLifecycle {
             }
         };
 
-        Thread thread = new Thread(serverRunnable);
+        Thread thread = new Thread(serverRunnable, "ZookeeperInProcess-Svr");
         thread.start();
     }
 
