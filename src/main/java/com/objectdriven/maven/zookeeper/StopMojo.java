@@ -9,11 +9,9 @@ import org.apache.maven.plugin.MojoFailureException;
  *
  * @goal stop
  */
-public class StopMojo extends AbstractMojo{
+public class StopMojo extends AbstractMojo {
 
-
-
-     /**
+    /**
      * @component
      */
     ZookeeperServerLifecycle zookeeperServerLifecycle;

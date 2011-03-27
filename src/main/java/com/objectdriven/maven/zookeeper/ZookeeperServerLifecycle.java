@@ -5,7 +5,6 @@ import org.apache.zookeeper.server.NIOServerCnxn;
 import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServer;
 import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  This class handles all of the gory details for
- *  launching and terminating a Zookeeper Server as part of a maven process
+ * This class handles all of the gory details for
+ * launching and terminating a Zookeeper Server as part of a maven process
  */
 public class ZookeeperServerLifecycle {
 
@@ -22,44 +21,45 @@ public class ZookeeperServerLifecycle {
     private NIOServerCnxn.Factory cnxnFactory;
     ZooKeeperServer server;
 
-    public void configureServer(String port, String datadir, String tickTime, String maxConnections) throws Exception{
-          List<String> configArguments = new ArrayList<String>();
-        if( StringUtils.isEmpty(port) ) {
+    public void configureServer(Integer port, File datadir, Integer tickTime, Integer maxConnections) throws Exception {
+        List<String> configArguments = new ArrayList<String>();
+        if (port == null) {
             throw new IllegalArgumentException("The port must be specified");
         } else {
-            configArguments.add(port);
+            configArguments.add(port.toString());
         }
 
-        if( StringUtils.isEmpty(datadir)){
+        if (datadir == null) {
             throw new IllegalArgumentException("The datadir must be specified");
         } else {
-            configArguments.add(datadir);
+            if (!datadir.exists()) {
+                if (!datadir.mkdirs()) {
+                    throw new RuntimeException("Unable to create datadir");
+                }
+            }
+            configArguments.add(datadir.getAbsolutePath());
         }
 
-        if( StringUtils.isNotEmpty(tickTime)){
-            if( !StringUtils.isNumeric(tickTime)){
-                throw new IllegalArgumentException("The ticktime argument was set, but it was not numeric");
-            }
-            configArguments.add(tickTime);
+        if (tickTime != null) {
+
+            configArguments.add(tickTime.toString());
         }
 
-        if( StringUtils.isNotEmpty(maxConnections)){
-            if(!StringUtils.isNumeric(maxConnections)){
-                throw new IllegalArgumentException("The maxConnections argument was set, but it was not numeric");
-            }
-            if( configArguments.size() == 2){ // No tick time was specified, add a null to pad it
+        if (maxConnections != null) {
+
+            if (configArguments.size() == 2) { // No tick time was specified, add a null to pad it
                 configArguments.add(null);
             }
-            configArguments.add( maxConnections);
+            configArguments.add(maxConnections.toString());
         }
 
-        serverConfig.parse(configArguments.toArray(new String[4]));
+        serverConfig.parse(configArguments.toArray(new String[configArguments.size()]));
 
         server = new ZooKeeperServer();
 
         FileTxnSnapLog transactionLog = new FileTxnSnapLog(
-                new File( serverConfig.getDataLogDir()),
-                new File( serverConfig.getDataDir())
+                new File(serverConfig.getDataLogDir()),
+                new File(serverConfig.getDataDir())
         );
         server.setTxnLogFactory(transactionLog);
         server.setTickTime(serverConfig.getTickTime());
@@ -73,17 +73,17 @@ public class ZookeeperServerLifecycle {
 
     }
 
-    public void start() throws Exception{
+    public void start() throws Exception {
         //Anonymous Inner class to fork running the server process to a different thread.
 
-        Runnable serverRunnable = new Runnable(){
+        Runnable serverRunnable = new Runnable() {
             public void run() {
                 try {
                     cnxnFactory.startup(server);
                 } catch (IOException e) {
-                  throw new RuntimeException("Unable to start", e);
+                    throw new RuntimeException("Unable to start", e);
                 } catch (InterruptedException e) {
-                   Thread.interrupted();
+                    Thread.interrupted();
                 }
             }
         };
@@ -95,7 +95,7 @@ public class ZookeeperServerLifecycle {
 
     public void stop() {
 
-        if( server.isRunning()){
+        if (server.isRunning()) {
             server.shutdown();
         }
 
