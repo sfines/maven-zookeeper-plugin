@@ -1,6 +1,7 @@
 package com.objectdriven.maven.zookeeper;
 
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.zookeeper.server.NIOServerCnxn;
 import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServer;
@@ -20,6 +21,9 @@ public class ZookeeperServerLifecycle {
     ServerConfig serverConfig = new ServerConfig();
     private NIOServerCnxn.Factory cnxnFactory;
     ZooKeeperServer server;
+    static{
+        BasicConfigurator.configure();
+    }
 
     /**
      * This method populates all of the required parameters for the Zookeeper server, but does no start it.

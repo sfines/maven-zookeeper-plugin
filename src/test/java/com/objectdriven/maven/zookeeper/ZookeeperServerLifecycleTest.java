@@ -33,10 +33,6 @@ public class ZookeeperServerLifecycleTest {
         serverLifecycle.start();
     }
 
-    @AfterClass
-    public static void terminateServer() throws Exception {
-        serverLifecycle.stop();
-    }
 
     /**
      * This is a basic smoke test- It is to ensure that we can connect
@@ -69,6 +65,10 @@ public class ZookeeperServerLifecycleTest {
 
     }
 
+    @AfterClass
+    public static void terminateServer() throws Exception {
+        serverLifecycle.stop();
+    }
 
     protected ZooKeeper newZooKeeper() throws IOException {
         return new ZooKeeper(hostString, timeout, new Watcher() {
