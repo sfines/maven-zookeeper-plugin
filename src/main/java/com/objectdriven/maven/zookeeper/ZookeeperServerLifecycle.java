@@ -1,7 +1,11 @@
 package com.objectdriven.maven.zookeeper;
 
 
+import org.apache.log4j.Appender;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.zookeeper.server.NIOServerCnxn;
 import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServer;
@@ -21,8 +25,29 @@ public class ZookeeperServerLifecycle {
     ServerConfig serverConfig = new ServerConfig();
     private NIOServerCnxn.Factory cnxnFactory;
     ZooKeeperServer server;
-    static{
+    static Logger logger;
+
+
+    /**
+     * Configures log4j based off of the Maven Plugin Logger.
+     * @param logLevel
+     */
+    protected void configureLogging( org.apache.maven.plugin.logging.Log logLevel){
         BasicConfigurator.configure();
+        logger =  Logger.getLogger("org.apache.zookeeper.server");
+        logger.setAdditivity(true);
+
+        if( logLevel == null ) {
+            logger.setLevel(Level.INFO);
+        } else if( logLevel.isDebugEnabled()){
+            logger.setLevel(Level.DEBUG);
+        } else if( logLevel.isInfoEnabled()){
+            logger.setLevel(Level.INFO);
+        } else if( logLevel.isWarnEnabled()){
+            logger.setLevel(Level.WARN);
+        } else if( logLevel.isErrorEnabled()){
+            logger.setLevel(Level.ERROR);
+        }
     }
 
     /**
@@ -34,7 +59,7 @@ public class ZookeeperServerLifecycle {
      * @param maxConnections
      * @throws Exception
      */
-    public void configureServer(Integer port, File datadir, Integer tickTime, Integer maxConnections) throws Exception {
+    public void configureServer(Integer port, File datadir, Integer tickTime, Integer maxConnections, Log logLevel) throws Exception {
         List<String> configArguments = new ArrayList<String>();
         if (port == null) {
             throw new IllegalArgumentException("The port must be specified");
@@ -65,6 +90,8 @@ public class ZookeeperServerLifecycle {
             }
             configArguments.add(maxConnections.toString());
         }
+
+        configureLogging(logLevel);
 
         serverConfig.parse(configArguments.toArray(new String[configArguments.size()]));
 

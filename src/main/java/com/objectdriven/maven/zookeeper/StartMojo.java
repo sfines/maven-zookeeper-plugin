@@ -45,9 +45,12 @@ public class StartMojo extends AbstractMojo {
      */
     private ZookeeperServerLifecycle zookeeperServerLifecycle;
 
+
+
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
-            zookeeperServerLifecycle.configureServer(port, dataDirectory, tickTime, maxConnections);
+            zookeeperServerLifecycle.configureServer(port, dataDirectory, tickTime, maxConnections, super.getLog());
+
             zookeeperServerLifecycle.start();
         } catch (Exception e) {
             throw new MojoExecutionException("Unable to start the Zookeeper Server", e);

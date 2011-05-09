@@ -29,7 +29,7 @@ public class ZookeeperServerLifecycleTest {
     @BeforeClass
     public static void configureLifecycle() throws Exception {
         serverLifecycle = new ZookeeperServerLifecycle();
-        serverLifecycle.configureServer(port, dataDir, null, null);
+        serverLifecycle.configureServer(port, dataDir, null, null, null);
         serverLifecycle.start();
     }
 
