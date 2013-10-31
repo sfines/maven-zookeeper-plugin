@@ -123,10 +123,15 @@ public class ZookeeperServerLifecycle {
         Runnable serverRunnable = new Runnable() {
             public void run() {
                 try {
+                    System.out.println("*********************** ATTEMPT ***************************");
                     cnxnFactory.startup(server);
+                    System.out.println("************************");
+                    System.out.println("Starting server");
+                    System.out.println("************************");
                 } catch (IOException e) {
                     throw new RuntimeException("Unable to start", e);
                 } catch (InterruptedException e) {
+                    System.out.println("********************** INTERUPTED *************************");
                     Thread.interrupted();
                 }
             }
@@ -134,6 +139,7 @@ public class ZookeeperServerLifecycle {
 
         Thread thread = new Thread(serverRunnable, "ZookeeperInProcess-Svr");
         thread.start();
+        System.out.println("*********************** Started Server Thread ***************************");
     }
 
 

@@ -4,7 +4,7 @@
     <groupId>com.objectdriven.maven</groupId>
     <artifactId>maven-zookeeper-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-zk3.3.3</version>
     <name>maven-zookeeper-plugin Maven Mojo</name>
     <url>https://github.com/sfines/maven-zookeeper-plugin</url>
 
@@ -28,24 +28,43 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.hadoop</groupId>
+            <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.3.1</version>
-	    <exclusions>
-  		<exclusion>
-			<groupId>javax.jms</groupId>
-			<artifactId>jms</artifactId>
-		</exclusion>
-		<exclusion>
-			<groupId>com.sun.jdmk</groupId>
-			<artifactId>jmxtools</artifactId>
-		</exclusion>
-		<exclusion>
-			<groupId>com.sun.jmx</groupId>
-			<artifactId>jmxri</artifactId>
-		</exclusion>
-	    </exclusions>
+            <version>3.3.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.jms</groupId>
+                    <artifactId>jms</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jdmk</groupId>
+                    <artifactId>jmxtools</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jmx</groupId>
+                    <artifactId>jmxri</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.hadoop</groupId>-->
+            <!--<artifactId>zookeeper</artifactId>-->
+            <!--<version>3.3.1</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>javax.jms</groupId>-->
+                    <!--<artifactId>jms</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>com.sun.jdmk</groupId>-->
+                    <!--<artifactId>jmxtools</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>com.sun.jmx</groupId>-->
+                    <!--<artifactId>jmxri</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-artifact</artifactId>
