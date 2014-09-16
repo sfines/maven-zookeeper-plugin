@@ -6,7 +6,9 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.server.NIOServerCnxn;
+import org.apache.zookeeper.server.NIOServerCnxnFactory;
 import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServer;
 import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
@@ -23,7 +25,7 @@ import java.util.List;
 public class ZookeeperServerLifecycle {
 
     ServerConfig serverConfig = new ServerConfig();
-    private NIOServerCnxn.Factory cnxnFactory;
+    private NIOServerCnxnFactory cnxnFactory;
     ZooKeeperServer server;
     static Logger logger;
 
@@ -37,17 +39,17 @@ public class ZookeeperServerLifecycle {
         logger =  Logger.getLogger("org.apache.zookeeper.server");
         logger.setAdditivity(true);
 
-        if( logLevel == null ) {
-            logger.setLevel(Level.INFO);
-        } else if( logLevel.isDebugEnabled()){
-            logger.setLevel(Level.DEBUG);
-        } else if( logLevel.isInfoEnabled()){
-            logger.setLevel(Level.INFO);
-        } else if( logLevel.isWarnEnabled()){
-            logger.setLevel(Level.WARN);
-        } else if( logLevel.isErrorEnabled()){
-            logger.setLevel(Level.ERROR);
-        }
+//        if( logLevel == null ) { logger.
+//            logger.setLevel(Level.INFO);
+//        } else if( logLevel.isDebugEnabled()){
+//            logger.setLevel(Level.DEBUG);
+//        } else if( logLevel.isInfoEnabled()){
+//            logger.setLevel(Level.INFO);
+//        } else if( logLevel.isWarnEnabled()){
+//            logger.setLevel(Level.WARN);
+//        } else if( logLevel.isErrorEnabled()){
+//            logger.setLevel(Level.ERROR);
+//        }
     }
 
     /**
@@ -106,7 +108,8 @@ public class ZookeeperServerLifecycle {
         server.setMinSessionTimeout(serverConfig.getMinSessionTimeout());
         server.setMaxSessionTimeout(serverConfig.getMaxSessionTimeout());
 
-        cnxnFactory = new NIOServerCnxn.Factory(
+        cnxnFactory = new NIOServerCnxnFactory();
+        cnxnFactory.configure(
                 serverConfig.getClientPortAddress(),
                 serverConfig.getMaxClientCnxns()
         );
