@@ -4,6 +4,7 @@ package com.objectdriven.maven.zookeeper;
 import org.apache.zookeeper.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,7 +15,7 @@ import static org.junit.Assert.fail;
 
 public class ZookeeperServerLifecycleTest {
 
-    static Integer port = Integer.valueOf(9999);
+    static Integer port = Integer.valueOf(21810);
     static String hostString = "localhost:" + port;
     static int timeout = 2000;
     static File dataDir = new File(System.getProperty("java.io.tmpdir"));
@@ -31,6 +32,7 @@ public class ZookeeperServerLifecycleTest {
         serverLifecycle = new ZookeeperServerLifecycle();
         serverLifecycle.configureServer(port, dataDir, null, null, null);
         serverLifecycle.start();
+        Thread.sleep(5000);
     }
 
 
@@ -49,6 +51,7 @@ public class ZookeeperServerLifecycleTest {
 
     @Test
     public void canCreateResourcesOnServer() throws Exception {
+
         ZooKeeper keeper = newZooKeeper();
         try {
             String pth = keeper.create("/test-ip", new byte[]{}, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
@@ -62,7 +65,7 @@ public class ZookeeperServerLifecycleTest {
         } catch (KeeperException ke) {
             fail(ke.getMessage());
         }
-
+        terminateServer();
     }
 
     @AfterClass

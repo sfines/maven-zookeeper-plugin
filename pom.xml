@@ -4,7 +4,7 @@
     <groupId>com.objectdriven.maven</groupId>
     <artifactId>maven-zookeeper-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1.0-zk3.4.5-cdh4.5.0</version>
     <name>maven-zookeeper-plugin Maven Mojo</name>
     <url>https://github.com/sfines/maven-zookeeper-plugin</url>
 
@@ -14,6 +14,18 @@
         <version>7</version>
     </parent>
 
+    <properties>
+        <zookeeper.version>3.4.5-cdh4.5.0</zookeeper.version>
+        <java.version>1.7</java.version>
+        <slf4j.version>1.7.4</slf4j.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>cloudera-repo-releases</id>
+            <url>https://repository.cloudera.com/artifactory/repo/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -28,23 +40,38 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.hadoop</groupId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.3.1</version>
-	    <exclusions>
-  		<exclusion>
-			<groupId>javax.jms</groupId>
-			<artifactId>jms</artifactId>
-		</exclusion>
-		<exclusion>
-			<groupId>com.sun.jdmk</groupId>
-			<artifactId>jmxtools</artifactId>
-		</exclusion>
-		<exclusion>
-			<groupId>com.sun.jmx</groupId>
-			<artifactId>jmxri</artifactId>
-		</exclusion>
-	    </exclusions>
+            <version>${zookeeper.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.jms</groupId>
+                    <artifactId>jms</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jdmk</groupId>
+                    <artifactId>jmxtools</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jmx</groupId>
+                    <artifactId>jmxri</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -81,8 +108,8 @@
 		<artifactId>maven-compiler-plugin</artifactId>
 		<version>2.3.2</version>
 		<configuration>
-			<source>1.6</source>
-			<target>1.6</target>
+			<source>${java.version}</source>
+			<target>${java.version}</target>
 		</configuration>
             </plugin>
         </plugins>
@@ -100,12 +127,15 @@
 
     <distributionManagement>
         <repository>
-            <id>sonatype-nexus-staging</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <id>raveldata-releases</id>
+            <name>raveldata-releases</name>
+            <url>https://raveldata.artifactoryonline.com/raveldata/libs-releases-local</url>
         </repository>
         <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <uniqueVersion>true</uniqueVersion>
+            <id>raveldata-snapshots</id>
+            <name>raveldata-snapshots</name>
+            <url>https://raveldata.artifactoryonline.com/raveldata/libs-snapshots-local</url>
         </snapshotRepository>
     </distributionManagement>
 
